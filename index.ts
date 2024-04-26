@@ -23,7 +23,7 @@ export default definePlugin({
     name: "VendroidEnhancements",
     description: "Makes Vendroid usable.",
     required: true,
-    authors: [Devs.nin0dev, Devs.Sqaaakoi],
+    authors: [{name: "nina", id: 886685857560539176n}, {name: "sqaa", id: 259558259491340288n}],
     patches: [
         // Disable DevTools footer button without needing to disable isStaff, by Sqaaakoi
         {
