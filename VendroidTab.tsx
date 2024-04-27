@@ -20,7 +20,7 @@ function VendroidTab() {
                     <Text>You can click on the button below to open the Vendroid settings screen.</Text>
                     <Button
                         color={Button.Colors.BRAND}
-                        style={{ marginTop: "3px" }} onClick={/*VencordMobileNative.openSettings()*/}>
+                        style={{ marginTop: "3px" }}>
                         Open settings
                     </Button>
                 </Flex>
@@ -28,15 +28,14 @@ function VendroidTab() {
             <Card className={classes("vc-settings-card", "info-card")}>
                 <Flex flexDirection="column">
                     <Text style={{ fontWeight: "bold", marginBottom: "3px" }}>Updater</Text>
-                    <Text>Currently, Vencord isn't auto-updated to save data. However, you can enable automatic update checking for Vendroid itself in <Link onClick={/*VencordMobileNative.openSettings()*/}>the app settings.</Link></Text>
+                    <Text>Currently, Vencord isn't auto-updated to save data. However, you can enable automatic update checking for Vendroid itself in <Link>the app settings.</Link></Text>
                     <Button
                         color={Button.Colors.TRANSPARENT}
-                        style={{ marginTop: "3px" }} onClick={/*VencordMobileNative.updateVencord()*/}>
+                        style={{ marginTop: "3px" }}>
                         Update Vencord
                     </Button>
                     <Button
-                        color={Button.Colors.TRANSPARENT}
-                        onClick={/*VencordMobileNative.checkVendroidUpdates()*/}>
+                        color={Button.Colors.TRANSPARENT}>
                         Check for Vendroid updates
                     </Button>
                 </Flex>
