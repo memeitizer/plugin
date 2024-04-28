@@ -1,29 +1,14 @@
-/*
- * Vencord, a modification for Discord's desktop app
- * Copyright (c) 2022 Vendicated and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+import definePlugin from "@utils/types";
 
-import { Devs } from "@utils/constants";
-import definePlugin, { OptionType } from "@utils/types";
-
+function isDev(id) {
+    const devs: string[] = ["886685857560539176", "259558259491340288"];
+    return devs.includes(id);
+}
 export default definePlugin({
     name: "VendroidEnhancements",
     description: "Makes Vendroid usable.",
     required: true,
-    authors: [{name: "nina", id: 886685857560539176n}, {name: "sqaa", id: 259558259491340288n}],
+    authors: [{ name: "nina", id: 886685857560539176n }, { name: "sqaa", id: 259558259491340288n }],
     patches: [
         // Disable DevTools footer button without needing to disable isStaff, by Sqaaakoi
         {
@@ -49,5 +34,21 @@ export default definePlugin({
                 replace: "true"
             }]
         },
-    ]
+    ],
+    async start() {
+        const VCMContributorBadge = {
+            description: "VendroidEnhanced Contributor",
+            image: "https://raw.githubusercontent.com/VendroidEnhanced/UpdateTracker/main/logo.png",
+            position: Vencord.Api.Badges.BadgePosition.START,
+            props: {
+                style: {
+                    borderRadius: "50%",
+                    transform: "scale(0.9)" // The image is a bit too big compared to default badges
+                }
+            },
+            shouldShow: ({ user }) => isDev(user.id.toString()),
+            link: "https://github.com/VendroidEnhanced/Vendroid"
+        };
+        Vencord.Api.Badges.addBadge(VCMContributorBadge);
+    },
 });
