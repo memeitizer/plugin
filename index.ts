@@ -1,7 +1,7 @@
 import definePlugin from "@utils/types";
 
 function isDev(id) {
-    const devs: string[] = ["886685857560539176", "259558259491340288"];
+    const devs: string[] = ["886685857560539176", "259558259491340288", "1230555039475568640"];
     return devs.includes(id);
 }
 export default definePlugin({
