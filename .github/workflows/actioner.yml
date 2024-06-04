@@ -1,0 +1,78 @@
+name: Build DevBuild
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - .github/workflows/build.yml
+            - src/**
+            - browser/**
+            - scripts/build/**
+            - package.json
+            - pnpm-lock.yaml
+env:
+    FORCE_COLOR: true
+
+jobs:
+    Build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Clone Vencord
+              uses: whyakari/github-repo-action@v3.1
+              with:
+                owner: "Vendicated"
+                repository: "Vencord"
+
+            - uses: pnpm/action-setup@v3 # Install pnpm using packageManager key in package.json
+
+            - name: Use Node.js 20
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: "pnpm"
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Fetch plugin
+              run: wget https://raw.githubusercontent.com/VendroidEnhanced/plugin/main/index.ts
+
+            - name: Fetch settings component
+              run: wget https://raw.githubusercontent.com/VendroidEnhanced/plugin/main/settings.tsx
+
+            - name: Fetch settings plugin
+              run: wget https://raw.githubusercontent.com/VendroidEnhanced/plugin/main/VendroidTab.tsx
+
+            - name: pwd
+              run: pwd
+
+            - name: Make plugin dir
+              run: mkdir -p src/plugins/vendroidEnhancements
+            
+            - name: Copy plugin
+              run: cp index.ts src/plugins/vendroidEnhancements/
+
+            - name: Copy component
+              run: cp VendroidTab.tsx src/components/VencordSettings/
+
+            - name: Copy settings
+              run: cp settings.tsx src/plugins/_core/
+
+            - name: Build web
+              run: pnpm buildWeb --standalone
+
+            - name: Clean up obsolete files
+              run: |
+                  rm -rf dist/*-unpacked dist/monaco Vencord.user.css vencordDesktopRenderer.css vencordDesktopRenderer.css.map
+            - name: Get some values needed for the release
+              id: release_values
+              run: |
+                  echo "release_tag=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+            - name: Upload DevBuild as release
+              run: |
+                  gh release upload devbuild --clobber dist/*
+                  gh release edit devbuild --title "DevBuild $RELEASE_TAG"
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  RELEASE_TAG: ${{ env.release_tag }}
