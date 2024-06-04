@@ -25,8 +25,8 @@ jobs:
                 owner: "Vendicated"
                 repository: "Vencord"
 
-            - name: cd
-              run: cd Vencord
+            - name: move
+              run: mv Vencord/* .
 
             - uses: pnpm/action-setup@v3 # Install pnpm using packageManager key in package.json
 
