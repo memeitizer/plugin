@@ -26,7 +26,10 @@ jobs:
                 repository: "Vencord"
 
             - name: move
-              run: mv Vencord/* .
+              run: mv -r Vencord/* .
+
+            - name: ls
+              run: ls -larth
 
             - uses: pnpm/action-setup@v3 # Install pnpm using packageManager key in package.json
 
