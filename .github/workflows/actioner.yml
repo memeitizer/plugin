@@ -25,6 +25,9 @@ jobs:
                 owner: "Vendicated"
                 repository: "Vencord"
 
+            - name: cd
+              run: cd Vencord
+
             - uses: pnpm/action-setup@v3 # Install pnpm using packageManager key in package.json
 
             - name: Use Node.js 20
