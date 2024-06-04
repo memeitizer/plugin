@@ -75,7 +75,9 @@ jobs:
                   echo "release_tag=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
             - name: Switch default repo (i hate gh_
-              run: gh repo set-default VendroidEnhanced/plugin
+              run: |
+                  git remote set-url origin https://github.com/VendroidEnhanced/plugin.git
+                  gh repo set-default VendroidEnhanced/plugin
             - name: Upload DevBuild as release
               run: |
                   gh release upload devbuild --clobber dist/* 
