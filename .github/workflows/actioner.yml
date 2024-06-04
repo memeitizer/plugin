@@ -74,7 +74,7 @@ jobs:
                   echo "release_tag=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
             - name: Upload DevBuild as release
               run: |
-                  gh release upload devbuild --clobber --repo "VendroidEnhanced/plugin" dist/* 
+                  gh release upload devbuild --clobber --R "VendroidEnhanced/plugin" dist/* 
                   gh release edit devbuild --title "DevBuild $RELEASE_TAG"
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
