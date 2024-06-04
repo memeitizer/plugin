@@ -72,9 +72,12 @@ jobs:
               id: release_values
               run: |
                   echo "release_tag=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+            - name: Switch default repo (i hate gh_
+              run: gh repo set-default VendroidEnhanced/plugin
             - name: Upload DevBuild as release
               run: |
-                  gh release upload devbuild --clobber --R "VendroidEnhanced/plugin" dist/* 
+                  gh release upload devbuild --clobber dist/* 
                   gh release edit devbuild --title "DevBuild $RELEASE_TAG"
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
