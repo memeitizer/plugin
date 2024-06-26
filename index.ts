@@ -1,3 +1,9 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2024 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 import definePlugin from "@utils/types";
 
 function isDev(id) {
@@ -10,30 +16,13 @@ export default definePlugin({
     required: true,
     authors: [{ name: "nina", id: 886685857560539176n }, { name: "sqaa", id: 259558259491340288n }],
     patches: [
-        // Disable DevTools footer button without needing to disable isStaff, by Sqaaakoi
-        {
-            find: ".DevToolsLayerProvider,",
-            replacement: [{
-                match: /(\(0,\i\.jsx)\)(\("div",\{className\:\i\.container,children:\(0,\i\.jsx\)\(\i\.Clickable,\{onClick\:\i\.toggleDisplayDevTools)/,
-                replace: "$1,()=>null)$2"
-            }]
-        },
-        // Disable legacy chat input, also by sqaaakoi
         {
             find: "chat input type must be set",
             replacement: [{
-                match: /(UseLegacyChatInput\.useSetting\(\))&&!\(0\,\i\.isAndroidWeb\)\(\)/,
+                match: /(\i.\i.useSetting\(\))&&!\(0,\i.isAndroidWeb\)\(\)/,
                 replace: "$1"
             }]
-        },
-        // Fix GIF picker
-        {
-            find: "Messages.EXPRESSION_PICKER_CATEGORIES_A11Y_LABEL",
-            replacement: [{
-                match: /\!\i\.isMobile/,
-                replace: "true"
-            }]
-        },
+        }
     ],
     async start() {
         const VCMContributorBadge = {
