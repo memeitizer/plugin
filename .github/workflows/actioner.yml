@@ -4,6 +4,8 @@ on:
     push:
         branches:
             - main
+    schedule:
+        - cron: "*/60 * * * *"
 env:
     FORCE_COLOR: true
     GH_TOKEN: ${{ github.token }}
