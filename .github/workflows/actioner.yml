@@ -21,14 +21,11 @@ jobs:
                 owner: "Vendicated"
                 repository: "Vencord"
 
-            - name: move
+            - name: Move Vencord at root
               run: mv -f Vencord/* .
 
-            - name: git
+            - name: Move git (hidden folder)
               run: mv -f Vencord/.git .
-
-            - name: ls
-              run: ls -larth
 
             - uses: pnpm/action-setup@v3 # Install pnpm using packageManager key in package.json
 
@@ -49,9 +46,6 @@ jobs:
 
             - name: Fetch settings plugin
               run: wget https://raw.githubusercontent.com/VendroidEnhanced/plugin/main/VendroidTab.tsx
-
-            - name: pwd
-              run: pwd
 
             - name: Make plugin dir
               run: mkdir -p src/plugins/vendroidEnhancements
