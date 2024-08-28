@@ -1,0 +1,135 @@
+commit 3b9b942a9ef507b540ed909c0dfb29d28e798e40
+Author: nin0dev <personal@nin0.dev>
+Date:   Wed Aug 28 10:15:39 2024 -0400
+
+    Added VendroidEnhanced changes
+
+diff --git a/src/components/VencordSettings/VendroidTab.tsx b/src/components/VencordSettings/VendroidTab.tsx
+new file mode 100644
+index 00000000..15db226f
+--- /dev/null
++++ b/src/components/VencordSettings/VendroidTab.tsx
+@@ -0,0 +1,49 @@
++/*
++ * Vencord, a Discord client mod
++ * Copyright (c) 2024 Vendicated and contributors
++ * SPDX-License-Identifier: GPL-3.0-or-later
++ */
++
++import { Flex } from "@components/Flex";
++import { Link } from "@components/Link";
++import { classes } from "@utils/misc";
++import { Button, Card, Text } from "@webpack/common";
++
++import { SettingsTab, wrapTab } from "./shared";
++
++function VendroidTab() {
++    return (
++        <SettingsTab title="Vendroid Settings">
++            <Card className={classes("vc-settings-card", "info-card")}>
++                <Flex flexDirection="column">
++                    <Text style={{ fontWeight: "bold", marginBottom: "3px" }}>Configure Vendroid</Text>
++                    <Text>You can click on the button below to open the Vendroid settings screen.</Text>
++                    <Button
++                        color={Button.Colors.BRAND}
++                        style={{ marginTop: "3px" }} onClick={() => { VencordMobileNative.openSettings()}}>
++                        Open settings
++                    </Button>
++                </Flex>
++            </Card>
++            <Card className={classes("vc-settings-card", "info-card")}>
++                <Flex flexDirection="column">
++                    <Text style={{ fontWeight: "bold", marginBottom: "3px" }}>Updater</Text>
++                    <Text>Currently, Vencord isn't auto-updated to save data. However, you can enable automatic update checking for Vendroid itself in <Link onClick={() => { VencordMobileNative.openSettings()}}>the app settings.</Link></Text>
++                    <Button
++                        color={Button.Colors.TRANSPARENT}
++                        style={{ marginTop: "3px" }} onClick={() => { VencordMobileNative.updateVencord()}}>
++                        Update Vencord
++                    </Button>
++                    <Button
++                        color={Button.Colors.TRANSPARENT}
++                        onClick={() => { VencordMobileNative.checkVendroidUpdates()}}>
++                        Check for Vendroid updates
++                    </Button>
++                </Flex>
++            </Card>
++        </SettingsTab>
++
++    );
++}
++
++export default wrapTab(VendroidTab, "Vendroid Settings");
+diff --git a/src/plugins/_core/settings.tsx b/src/plugins/_core/settings.tsx
+index 3cc02083..797c735c 100644
+--- a/src/plugins/_core/settings.tsx
++++ b/src/plugins/_core/settings.tsx
+@@ -24,6 +24,7 @@ import PluginsTab from "@components/VencordSettings/PluginsTab";
+ import ThemesTab from "@components/VencordSettings/ThemesTab";
+ import UpdaterTab from "@components/VencordSettings/UpdaterTab";
+ import VencordTab from "@components/VencordSettings/VencordTab";
++import VendroidTab from "@components/VencordSettings/VendroidTab";
+ import { Devs } from "@utils/constants";
+ import definePlugin, { OptionType } from "@utils/types";
+ import { i18n, React } from "@webpack/common";
+@@ -123,6 +124,12 @@ export default definePlugin({
+                 element: BackupAndRestoreTab,
+                 className: "vc-backup-restore"
+             },
++	    {
++                section: "VendroidSettings",
++                label: "Vendroid Settings",
++                element: VendroidTab,
++                className: "vc-vendroid"
++            },
+             IS_DEV && {
+                 section: "VencordPatchHelper",
+                 label: "Patch Helper",
+diff --git a/src/plugins/vendroidEnhancements/index.ts b/src/plugins/vendroidEnhancements/index.ts
+new file mode 100644
+index 00000000..0d5e8760
+--- /dev/null
++++ b/src/plugins/vendroidEnhancements/index.ts
+@@ -0,0 +1,43 @@
++/*
++ * Vencord, a Discord client mod
++ * Copyright (c) 2024 Vendicated and contributors
++ * SPDX-License-Identifier: GPL-3.0-or-later
++ */
++
++import definePlugin from "@utils/types";
++
++function isDev(id) {
++    const devs: string[] = ["886685857560539176", "259558259491340288", "1230555039475568640"];
++    return devs.includes(id);
++}
++export default definePlugin({
++    name: "VendroidEnhancements",
++    description: "Makes Vendroid usable.",
++    required: true,
++    authors: [{ name: "nina", id: 886685857560539176n }, { name: "sqaa", id: 259558259491340288n }],
++    patches: [
++        {
++            find: "chat input type must be set",
++            replacement: [{
++                match: /(\i.\i.useSetting\(\))&&!\(0,\i.isAndroidWeb\)\(\)/,
++                replace: "$1"
++            }]
++        }
++    ],
++    async start() {
++        const VCMContributorBadge = {
++            description: "VendroidEnhanced Contributor",
++            image: "https://raw.githubusercontent.com/VendroidEnhanced/UpdateTracker/main/logo.png",
++            position: Vencord.Api.Badges.BadgePosition.START,
++            props: {
++                style: {
++                    borderRadius: "50%",
++                    transform: "scale(0.9)" // The image is a bit too big compared to default badges
++                }
++            },
++            shouldShow: ({ user }) => isDev(user.id.toString()),
++            link: "https://github.com/VendroidEnhanced/Vendroid"
++        };
++        Vencord.Api.Badges.addBadge(VCMContributorBadge);
++    },
++});
