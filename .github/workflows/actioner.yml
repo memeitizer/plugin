@@ -24,6 +24,9 @@ jobs:
             - name: Move Vencord at root
               run: mv -f Vencord/* .
 
+            - name: Move git (hidden folder)
+              run: mv -f Vencord/.git .
+
             - uses: pnpm/action-setup@v3 # Install pnpm using packageManager key in package.json
 
             - name: Use Node.js 20
