@@ -24,9 +24,6 @@ jobs:
             - name: Move Vencord at root
               run: mv -f Vencord/* .
 
-            - name: Move git (hidden folder)
-              run: mv -f Vencord/.git .
-
             - uses: pnpm/action-setup@v3 # Install pnpm using packageManager key in package.json
 
             - name: Use Node.js 20
@@ -38,26 +35,11 @@ jobs:
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
-            - name: Fetch plugin
-              run: wget https://raw.githubusercontent.com/VendroidEnhanced/plugin/main/index.ts
+            - name: Fetch patch file
+              run: wget https://raw.githubusercontent.com/nin0-dev/plugger/main/vde.patch
 
-            - name: Fetch settings component
-              run: wget https://raw.githubusercontent.com/VendroidEnhanced/plugin/main/settings.tsx
-
-            - name: Fetch settings plugin
-              run: wget https://raw.githubusercontent.com/VendroidEnhanced/plugin/main/VendroidTab.tsx
-
-            - name: Make plugin dir
-              run: mkdir -p src/plugins/vendroidEnhancements
-            
-            - name: Copy plugin
-              run: cp index.ts src/plugins/vendroidEnhancements/
-
-            - name: Copy component
-              run: cp VendroidTab.tsx src/components/VencordSettings/
-
-            - name: Copy settings
-              run: cp settings.tsx src/plugins/_core/
+            - name: Apply patch
+              run: git apply vde.patch
 
             - name: Build web
               run: pnpm buildWeb --standalone
@@ -74,6 +56,7 @@ jobs:
               run: |
                   git remote set-url origin https://github.com/VendroidEnhanced/plugin.git
                   gh repo set-default VendroidEnhanced/plugin
+                  
             - name: Upload DevBuild as release
               run: |
                   gh release upload devbuild --clobber dist/* 
