@@ -41,6 +41,8 @@ jobs:
             - name: Apply patch
               run: git apply vde.patch
 
+            - name: ls
+              run: ls
             - name: Build web
               run: pnpm buildWeb --standalone
 
