@@ -1,8 +1,16 @@
-commit 3b9b942a9ef507b540ed909c0dfb29d28e798e40
-Author: nin0dev <personal@nin0.dev>
-Date:   Wed Aug 28 10:15:39 2024 -0400
+From 8f636aeaa69d6fa1fac318f36ccdf90d81d67561 Mon Sep 17 00:00:00 2001
+From: nin0dev <personal@nin0.dev>
+Date: Mon, 2 Sep 2024 09:03:00 -0400
+Subject: [PATCH] more things
 
-    Added VendroidEnhanced changes
+---
+ .../VencordSettings/VendroidTab.tsx           |  49 ++++++++
+ src/main/monacoWin.html                       | 111 ++++++++----------
+ src/plugins/_core/settings.tsx                |   7 ++
+ src/plugins/vendroidEnhancements/index.ts     |  45 +++++++
+ 4 files changed, 153 insertions(+), 59 deletions(-)
+ create mode 100644 src/components/VencordSettings/VendroidTab.tsx
+ create mode 100644 src/plugins/vendroidEnhancements/index.ts
 
 diff --git a/src/components/VencordSettings/VendroidTab.tsx b/src/components/VencordSettings/VendroidTab.tsx
 new file mode 100644
@@ -59,8 +67,131 @@ index 00000000..15db226f
 +}
 +
 +export default wrapTab(VendroidTab, "Vendroid Settings");
+diff --git a/src/main/monacoWin.html b/src/main/monacoWin.html
+index ca7d0a78..7914273f 100644
+--- a/src/main/monacoWin.html
++++ b/src/main/monacoWin.html
+@@ -1,66 +1,59 @@
+ <!DOCTYPE html>
+ <html lang="en">
+-    <head>
+-        <meta charset="utf-8" />
+-        <title>Vencord QuickCSS Editor</title>
+-        <link
+-            rel="stylesheet"
+-            href="https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/min/vs/editor/editor.main.css"
+-            integrity="sha256-tiJPQ2O04z/pZ/AwdyIghrOMzewf+PIvEl1YKbQvsZk="
+-            crossorigin="anonymous"
+-            referrerpolicy="no-referrer"
+-        />
+-        <style>
+-            html,
+-            body,
+-            #container {
+-                position: absolute;
+-                left: 0;
+-                top: 0;
+-                width: 100%;
+-                height: 100%;
+-                margin: 0;
+-                padding: 0;
+-                overflow: hidden;
+-            }
+-        </style>
+-    </head>
+ 
+-    <body>
+-        <div id="container"></div>
+-        <script
+-            src="https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/min/vs/loader.js"
+-            integrity="sha256-KcU48TGr84r7unF7J5IgBo95aeVrEbrGe04S7TcFUjs="
+-            crossorigin="anonymous"
+-            referrerpolicy="no-referrer"
+-        ></script>
++<head>
++    <meta charset="utf-8" />
++    <title>Vencord QuickCSS Editor</title>
++    <style>
++        h2 {
++            font-family: sans-serif;
++            text-align: center;
++        }
+ 
+-        <script>
+-            require.config({
+-                paths: {
+-                    vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/min/vs",
+-                },
+-            });
++        button {
++            display: block;
++            width: 100%;
++        }
++
++        h2,
++        button {
++            flex-shrink: 0;
++            margin-bottom: 10px;
++        }
++
++        .container {
++            display: flex;
++            flex-direction: column;
++            min-height: 100vh;
++        }
++
++        textarea {
++            min-height: 400px;
++        }
+ 
+-            require(["vs/editor/editor.main"], () => {
+-                getCurrentCss().then((css) => {
+-                    var editor = monaco.editor.create(
+-                        document.getElementById("container"),
+-                        {
+-                            value: css,
+-                            language: "css",
+-                            theme: getTheme(),
+-                        }
+-                    );
+-                    editor.onDidChangeModelContent(() =>
+-                        setCss(editor.getValue())
+-                    );
+-                    window.addEventListener("resize", () => {
+-                        // make monaco re-layout
+-                        editor.layout();
+-                    });
+-                });
++        .header {
++            display: flex;
++            align-items: center;
++            margin-bottom: 10px;
++        }
++    </style>
++</head>
++
++<body>
++    <div class="container">
++        <button onclick="window.close()">Close</button>
++        <h2>QuickCSS editor</h2>
++        <textarea></textarea>
++    </div>
++    <script>
++        getCurrentCss().then((css) => {
++            document.querySelector("textarea").value = css;
++            document.querySelector("textarea").addEventListener("input", (_) => {
++                setCss(document.querySelector("textarea").value);
+             });
+-        </script>
+-    </body>
++        });
++
++    </script>
++</body>
++
+ </html>
 diff --git a/src/plugins/_core/settings.tsx b/src/plugins/_core/settings.tsx
-index 3cc02083..797c735c 100644
+index be220db1..ecb70201 100644
 --- a/src/plugins/_core/settings.tsx
 +++ b/src/plugins/_core/settings.tsx
 @@ -24,6 +24,7 @@ import PluginsTab from "@components/VencordSettings/PluginsTab";
@@ -86,16 +217,17 @@ index 3cc02083..797c735c 100644
                  label: "Patch Helper",
 diff --git a/src/plugins/vendroidEnhancements/index.ts b/src/plugins/vendroidEnhancements/index.ts
 new file mode 100644
-index 00000000..0d5e8760
+index 00000000..6ce13f63
 --- /dev/null
 +++ b/src/plugins/vendroidEnhancements/index.ts
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,45 @@
 +/*
 + * Vencord, a Discord client mod
 + * Copyright (c) 2024 Vendicated and contributors
 + * SPDX-License-Identifier: GPL-3.0-or-later
 + */
 +
++import { Devs } from "@utils/constants";
 +import definePlugin from "@utils/types";
 +
 +function isDev(id) {
@@ -106,7 +238,7 @@ index 00000000..0d5e8760
 +    name: "VendroidEnhancements",
 +    description: "Makes Vendroid usable.",
 +    required: true,
-+    authors: [{ name: "nina", id: 886685857560539176n }, { name: "sqaa", id: 259558259491340288n }],
++    authors: [Devs.nin0dev, Devs.Sqaaakoi],
 +    patches: [
 +        {
 +            find: "chat input type must be set",
@@ -130,6 +262,10 @@ index 00000000..0d5e8760
 +            shouldShow: ({ user }) => isDev(user.id.toString()),
 +            link: "https://github.com/VendroidEnhanced/Vendroid"
 +        };
++        // @ts-ignore shut up
 +        Vencord.Api.Badges.addBadge(VCMContributorBadge);
 +    },
 +});
+-- 
+2.46.0.windows.1
+
