@@ -99,7 +99,7 @@ index ca7d0a78..7914273f 100644
 -            }
 -        </style>
 -    </head>
- 
+
 -    <body>
 -        <div id="container"></div>
 -        <script
@@ -116,7 +116,7 @@ index ca7d0a78..7914273f 100644
 +            font-family: sans-serif;
 +            text-align: center;
 +        }
- 
+
 -        <script>
 -            require.config({
 -                paths: {
@@ -143,7 +143,7 @@ index ca7d0a78..7914273f 100644
 +        textarea {
 +            min-height: 400px;
 +        }
- 
+
 -            require(["vs/editor/editor.main"], () => {
 -                getCurrentCss().then((css) => {
 -                    var editor = monaco.editor.create(
@@ -191,7 +191,7 @@ index ca7d0a78..7914273f 100644
 +
  </html>
 diff --git a/src/plugins/_core/settings.tsx b/src/plugins/_core/settings.tsx
-index be220db1..ecb70201 100644
+index d58c7a98..ca5014d3 100644
 --- a/src/plugins/_core/settings.tsx
 +++ b/src/plugins/_core/settings.tsx
 @@ -24,6 +24,7 @@ import PluginsTab from "@components/VencordSettings/PluginsTab";
@@ -200,13 +200,13 @@ index be220db1..ecb70201 100644
  import VencordTab from "@components/VencordSettings/VencordTab";
 +import VendroidTab from "@components/VencordSettings/VendroidTab";
  import { Devs } from "@utils/constants";
+ import { getIntlMessage } from "@utils/discord";
  import definePlugin, { OptionType } from "@utils/types";
- import { i18n, React } from "@webpack/common";
-@@ -123,6 +124,12 @@ export default definePlugin({
+@@ -124,6 +125,12 @@ export default definePlugin({
                  element: BackupAndRestoreTab,
                  className: "vc-backup-restore"
              },
-+	    {
++            {
 +                section: "VendroidSettings",
 +                label: "Vendroid Settings",
 +                element: VendroidTab,
@@ -266,6 +266,6 @@ index 00000000..6ce13f63
 +        Vencord.Api.Badges.addBadge(VCMContributorBadge);
 +    },
 +});
--- 
+--
 2.46.0.windows.1
 
