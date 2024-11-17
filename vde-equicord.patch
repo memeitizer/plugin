@@ -80,10 +80,10 @@ index a23cbe73..055c0ee1 100644
                  label: "Patch Helper",
 diff --git a/src/plugins/vendroidEnhancements/index.tsx b/src/plugins/vendroidEnhancements/index.tsx
 new file mode 100644
-index 00000000..db7900e9
+index 00000000..148e285f
 --- /dev/null
 +++ b/src/plugins/vendroidEnhancements/index.tsx
-@@ -0,0 +1,105 @@
+@@ -0,0 +1,129 @@
 +/*
 + * Vencord, a Discord client mod
 + * Copyright (c) 2024 Vendicated and contributors
@@ -105,6 +105,7 @@ index 00000000..db7900e9
 +    return devs.includes(id);
 +}
 +const VENCORD_SUPPORT_ID = "1026515880080842772";
++const EQUICORD_SUPPORT_ID = "1297590739911573585";
 +const NINAWARE_SUPPORT_ID = "1279410015681122396";
 +
 +
@@ -118,6 +119,24 @@ index 00000000..db7900e9
 +
 +            <Forms.FormText className={Margins.top8}>
 +                Vencord only provides support for official builds. Therefore, please ask for support in the <Link href="https://discord.gg/qtmpcF56Yf">VendroidEnhanced support server</Link>.
++            </Forms.FormText>
++
++            <Text variant="text-md/bold" className={Margins.top8}>You will be banned from receiving support if you ignore this rule.</Text>
++
++            <Text variant="text-xs/medium" className={Margins.top8}>You can disable this warning and regain message sending permissions here in the VendroidEnhancements plugin settings.</Text>
++        </>,
++    });
++}
++
++function showNoEquicordSupportModal() {
++    Alerts.show({
++        title: "Hold on!",
++        body: <>
++            <img src={DUKE_B64} />
++            <Forms.FormText className={Margins.top8}>You are using VendroidEnhanced, which the Equicord Server does not provide support for!</Forms.FormText>
++
++            <Forms.FormText className={Margins.top8}>
++                Equicord only provides support for official builds. Therefore, please ask for support in the <Link href="https://discord.gg/qtmpcF56Yf">VendroidEnhanced support server</Link>.
 +            </Forms.FormText>
 +
 +            <Text variant="text-md/bold" className={Margins.top8}>You will be banned from receiving support if you ignore this rule.</Text>
@@ -180,6 +199,11 @@ index 00000000..db7900e9
 +            switch (channelId) {
 +                case VENCORD_SUPPORT_ID: {
 +                    showNoVencordSupportModal();
++                    break;
++                }
++                case EQUICORD_SUPPORT_ID: {
++                    showNoEquicordSupportModal();
++                    break;
 +                }
 +            }
 +        }
