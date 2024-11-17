@@ -1,0 +1,68 @@
+name: Build DevBuild
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+    schedule:
+        - cron: "*/120 * * * *"
+env:
+    FORCE_COLOR: true
+    GH_TOKEN: ${{ github.token }}
+
+jobs:
+    Build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Clone Vencord
+              run: git clone https://github.com/Equicord/Equicord
+
+            - name: Move Vencord at root
+              run: mv -f Equicord/* .
+
+            - name: Move git (hidden folder)
+              run: mv -f Equicord/.git .
+
+            - uses: pnpm/action-setup@v3 # Install pnpm using packageManager key in package.json
+
+            - name: Use Node.js 20
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: "pnpm"
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Fetch patch file
+              run: wget https://raw.githubusercontent.com/VendroidEnhanced/plugin/refs/heads/main/vde-equicord.patch
+
+            - name: Apply patch
+              run: git apply vde-equicord.patch
+
+            - name: ls
+              run: ls
+            - name: Build web
+              run: pnpm buildWeb --standalone
+
+            - name: Clean up obsolete files
+              run: |
+                  rm -rf dist/*-unpacked dist/monaco Vencord.user.css vencordDesktopRenderer.css vencordDesktopRenderer.css.map
+            - name: Get some values needed for the release
+              id: release_values
+              run: |
+                  echo "release_tag=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+            - name: Switch default repo (i hate gh_
+              run: |
+                  git remote set-url origin https://github.com/VendroidEnhanced/plugin.git
+                  gh repo set-default VendroidEnhanced/plugin
+                  
+            - name: Upload DevBuild as release
+              run: |
+                  gh release upload devbuild-equi --clobber dist/* 
+                  gh release edit devbuild-equi --title "Equicord DevBuild $RELEASE_TAG"
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  RELEASE_TAG: ${{ env.release_tag }}
