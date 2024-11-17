@@ -36,7 +36,7 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             - name: Fetch patch file
-              run: wget https://raw.githubusercontent.com/nin0-dev/plugger/main/vde.patch
+              run: wget https://raw.githubusercontent.com/VendroidEnhanced/plugin/refs/heads/main/vde.patch
 
             - name: Apply patch
               run: git apply vde.patch
