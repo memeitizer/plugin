@@ -1,4 +1,4 @@
-name: Build DevBuild
+name: [Equicord] Build DevBuild
 on:
     workflow_dispatch:
     push:
